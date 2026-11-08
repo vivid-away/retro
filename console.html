@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="application-name" content="RETRO COLLECTOR">
+  <meta name="description"      content="レトロゲーム収集管理アプリ">
+  <meta name="theme-color"      content="#1a0a2e">
+  <link rel="manifest"          href="manifest.json">
+  <meta name="apple-mobile-web-app-capable"          content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title"            content="RetroCol">
+  <link rel="apple-touch-icon"                href="icons/icon-152.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="icons/icon-152.png">
+  <link rel="apple-touch-icon" sizes="192x192" href="icons/icon-192.png">
+  <meta name="mobile-web-app-capable"      content="yes">
+  <meta name="msapplication-TileImage"     content="icons/icon-144.png">
+  <meta name="msapplication-TileColor"     content="#1a0a2e">
+  <meta name="msapplication-tap-highlight" content="no">
+  <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+  <link rel="icon" type="image/png" sizes="96x96"   href="icons/icon-96.png">
+  <link rel="shortcut icon"                          href="icons/icon-96.png">
+  <title>RETRO COLLECTOR - Console</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="console.css">
+</head>
+<body class="console-body">
+
+  <!-- HEADER -->
+  <header class="console-header" id="consoleHeader">
+    <div class="header-scanline"></div>
+    <div class="header-inner">
+      <a href="index.html" class="back-btn">◀ BACK</a>
+      <div class="console-title-area">
+        <span class="console-badge" id="consoleBadge">--</span>
+        <div>
+          <h1 class="console-name" id="consoleName">Loading...</h1>
+          <p class="console-sub" id="consoleSub">---</p>
+        </div>
+      </div>
+      <div class="header-rate" id="headerRate">0%</div>
+    </div>
+  </header>
+
+  <!-- STATS BAR -->
+  <div class="console-stats-bar">
+    <div class="cstat">
+      <span class="cstat-val" id="cstatTotal">0</span>
+      <span class="cstat-lbl">タイトル</span>
+    </div>
+    <div class="cstat owned">
+      <span class="cstat-val" id="cstatOwned">0</span>
+      <span class="cstat-lbl">所持</span>
+    </div>
+    <div class="cstat missing">
+      <span class="cstat-val" id="cstatMissing">0</span>
+      <span class="cstat-lbl">未所持</span>
+    </div>
+    <div class="cstat wish">
+      <span class="cstat-val" id="cstatWish">0</span>
+      <span class="cstat-lbl">ウィッシュ</span>
+    </div>
+    <div class="cstat value">
+      <span class="cstat-val" id="cstatValue">¥0</span>
+      <span class="cstat-lbl">資産価値</span>
+    </div>
+  </div>
+
+  <!-- PROGRESS -->
+  <div class="console-progress-bar">
+    <div class="progress-track">
+      <div class="progress-fill" id="consoleProgressFill" style="width:0%"></div>
+    </div>
+  </div>
+
+  <!-- TOOLBAR -->
+  <div class="toolbar">
+    <div class="search-box">
+      <span class="search-icon">🔍</span>
+      <input type="text" id="searchInput" class="search-input" placeholder="タイトル・発売元・番号で検索...">
+      <button class="clear-btn" id="clearSearch" onclick="clearSearch()">✕</button>
+    </div>
+    <div class="filter-group">
+      <button class="filter-btn active" data-filter="all"     onclick="setFilter('all')">ALL</button>
+      <button class="filter-btn"        data-filter="owned"   onclick="setFilter('owned')">所持</button>
+      <button class="filter-btn"        data-filter="missing" onclick="setFilter('missing')">未所持</button>
+      <button class="filter-btn wish-filter" data-filter="wish" onclick="setFilter('wish')">♡ WISH</button>
+    </div>
+    <div class="sort-group">
+      <select class="pixel-select" id="sortSelect" onchange="applySort()">
+        <option value="serial">番号順</option>
+        <option value="title">タイトル順</option>
+        <option value="rarity">レア度順</option>
+        <option value="date">発売日順</option>
+        <option value="price_desc">金額 高→低</option>
+        <option value="price_asc">金額 低→高</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- RESULT INFO -->
+  <div class="result-info" id="resultInfo">0件表示</div>
+
+  <!-- GAME LIST -->
+  <main class="game-list-container">
+    <div class="game-list" id="gameList"></div>
+    <div class="empty-state" id="emptyState" style="display:none">
+      <div class="empty-icon">👾</div>
+      <p>データが見つかりません</p>
+    </div>
+  </main>
+
+  <!-- ===== GAME EDIT MODAL ===== -->
+  <div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+    <div class="modal" id="editModal">
+      <div class="modal-header">
+        <h3 class="modal-title" id="modalTitle">GAME DETAIL</h3>
+        <button class="modal-close" onclick="closeModal()">✕</button>
+      </div>
+      <div class="modal-body">
+
+        <!-- Game info block -->
+        <div class="modal-game-info" id="modalGameInfo"></div>
+
+        <hr class="modal-divider">
+
+        <!-- ★ レア度編集 -->
+        <div class="rarity-edit-section">
+          <div class="rarity-edit-header">
+            <span class="pixel-label" style="margin:0">レア度</span>
+            <span class="rarity-original-label" id="rarityOrigLabel"></span>
+          </div>
+          <div class="star-editor" id="starEditor">
+            <button class="star-btn" data-v="0" onclick="setStarEdit(0)">なし</button>
+            <button class="star-btn" data-v="1" onclick="setStarEdit(1)">★</button>
+            <button class="star-btn" data-v="2" onclick="setStarEdit(2)">★★</button>
+            <button class="star-btn" data-v="3" onclick="setStarEdit(3)">★★★</button>
+            <button class="star-btn" data-v="4" onclick="setStarEdit(4)">★★★★</button>
+            <button class="star-btn" data-v="5" onclick="setStarEdit(5)">★★★★★</button>
+            <button class="star-btn reset-star"  onclick="setStarEdit(null)">↩ 元に戻す</button>
+          </div>
+          <p class="rarity-hint">変更すると★表示が上書きされます。「元に戻す」でCSV値に戻ります。</p>
+        </div>
+
+        <hr class="modal-divider">
+
+        <!-- ♡ ウィッシュ登録 (v3) -->
+        <div class="wish-modal-section">
+          <span class="pixel-label" style="margin:0;display:block;margin-bottom:8px">WISH LIST</span>
+          <button id="modalWishBtn" class="wish-toggle-btn" onclick="clickModalWish()">
+            ♡ ウィッシュに追加
+          </button>
+          <p class="rarity-hint">ウィッシュ登録すると欲しいリストに表示されます。所持済みにすると自動的に解除されます。</p>
+        </div>
+
+        <hr class="modal-divider">
+
+        <!-- Collection data -->
+        <div class="modal-form">
+          <div class="form-row">
+            <label class="pixel-label">所持</label>
+            <label class="toggle-switch">
+              <input type="checkbox" id="ownedCheck">
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+          <div class="form-row">
+            <label class="pixel-label">金額 (¥)</label>
+            <input type="number" id="priceInput" class="pixel-input" placeholder="0" min="0">
+          </div>
+          <div class="form-row">
+            <label class="pixel-label">購入日</label>
+            <input type="date" id="purchaseDateInput" class="pixel-input">
+          </div>
+          <div class="form-row">
+            <label class="pixel-label">メモ</label>
+            <textarea id="memoInput" class="pixel-input pixel-textarea" placeholder="メモを入力..."></textarea>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="pixel-btn secondary" onclick="closeModal()">キャンセル</button>
+        <button class="pixel-btn primary"   onclick="saveGame()">▶ 保存</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== PWA 更新通知バナー ===== -->
+  <div class="update-banner" id="updateBanner" style="display:none">
+    <span>🔄 アプリの更新があります</span>
+    <button class="update-btn" onclick="applyUpdate()">今すぐ更新</button>
+    <button class="update-dismiss" onclick="document.getElementById('updateBanner').style.display='none'">✕</button>
+  </div>
+
+  <script src="db.js"></script>
+  <script src="console.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      let newWorker;
+      navigator.serviceWorker.register('./sw.js', { scope: './' })
+        .then(reg => {
+          reg.update();
+          reg.addEventListener('updatefound', () => {
+            newWorker = reg.installing;
+            newWorker.addEventListener('statechange', () => {
+              if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                document.getElementById('updateBanner').style.display = 'flex';
+              }
+            });
+          });
+        }).catch(err => console.warn('SW:', err));
+      window.applyUpdate = () => {
+        if (newWorker) newWorker.postMessage('SKIP_WAITING');
+        navigator.serviceWorker.addEventListener('controllerchange', () => location.reload());
+      };
+    }
+  </script>
+</body>
+</html>

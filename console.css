@@ -1,0 +1,269 @@
+/* ===================================================
+   RETRO COLLECTOR - console.css  v3.0
+   =================================================== */
+
+/* ── Console Header ── */
+.console-header {
+  position: sticky; top: 0; z-index: 100;
+  background: linear-gradient(135deg, #1a0a2e 0%, #0d1a4a 100%);
+  border-bottom: 3px solid var(--border2);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+.header-inner {
+  display: flex; align-items: center;
+  gap: 12px; padding: 12px 16px; flex-wrap: wrap;
+}
+.back-btn {
+  font-family: var(--pixel-font); font-size: 9px;
+  color: var(--text2); padding: 6px 12px;
+  border: 2px solid var(--border); border-radius: var(--radius);
+  transition: all 0.2s; white-space: nowrap; flex-shrink: 0;
+}
+.back-btn:hover { border-color: var(--cyan); color: var(--cyan); }
+.console-title-area { display: flex; align-items: center; gap: 12px; flex: 1; }
+.console-badge {
+  font-family: var(--pixel-font); font-size: 9px;
+  padding: 5px 10px; border-radius: var(--radius);
+  border: 2px solid rgba(255,255,255,0.3);
+  background: rgba(0,0,0,0.3); color: #fff; white-space: nowrap;
+}
+.console-name {
+  font-size: 11px; color: var(--cyan);
+  text-shadow: 0 0 12px rgba(0,245,255,0.6); letter-spacing: 1px;
+}
+.console-sub { font-size: 11px; color: var(--text2); }
+.header-rate {
+  font-family: var(--pixel-font); font-size: 13px;
+  color: var(--green); text-shadow: 0 0 10px rgba(57,255,20,0.6);
+  margin-left: auto; white-space: nowrap;
+}
+
+/* ── Stats Bar (5列) ── */
+.console-stats-bar {
+  display: flex;
+  background: var(--surface);
+  border-bottom: 2px solid var(--border);
+}
+.cstat {
+  flex: 1; text-align: center; padding: 10px 4px;
+  border-right: 1px solid var(--border);
+}
+.cstat:last-child { border-right: none; }
+.cstat.owned   .cstat-val { color: var(--green); }
+.cstat.missing .cstat-val { color: var(--accent); }
+.cstat.wish    .cstat-val { color: var(--wish-color, #ff6eb4); }
+.cstat.value   .cstat-val { color: var(--gold); }
+.cstat-val { display: block; font-size: 14px; font-weight: 700; color: var(--text); line-height: 1.2; }
+.cstat-lbl { display: block; font-size: 8px; color: var(--text3); margin-top: 2px; }
+
+/* ── Progress ── */
+.console-progress-bar {
+  padding: 5px 14px; background: var(--bg2); border-bottom: 2px solid var(--border);
+}
+.console-progress-bar .progress-track { height: 10px; }
+
+/* ── Toolbar ── */
+.toolbar {
+  display: flex; align-items: center; gap: 8px;
+  padding: 10px 14px; background: var(--bg2);
+  border-bottom: 2px solid var(--border);
+  flex-wrap: wrap;
+  position: sticky; top: 62px; z-index: 90;
+}
+.search-box {
+  display: flex; align-items: center;
+  background: var(--bg); border: 2px solid var(--border);
+  border-radius: var(--radius); padding: 6px 10px; gap: 8px;
+  flex: 1; min-width: 160px; transition: border-color 0.2s;
+}
+.search-box:focus-within { border-color: var(--cyan); }
+.search-icon { font-size: 14px; flex-shrink: 0; }
+.search-input {
+  background: none; border: none; color: var(--text);
+  font-family: var(--body-font); font-size: 13px;
+  outline: none; flex: 1; min-width: 0;
+}
+.search-input::placeholder { color: var(--text3); }
+.clear-btn {
+  background: none; border: none; color: var(--text3);
+  cursor: pointer; font-size: 12px; padding: 0 2px; display: none;
+}
+.clear-btn.visible { display: block; }
+
+.filter-group { display: flex; gap: 4px; flex-shrink: 0; flex-wrap: wrap; }
+.filter-btn {
+  font-family: var(--pixel-font); font-size: 8px;
+  padding: 6px 10px; background: var(--bg);
+  border: 2px solid var(--border); border-radius: var(--radius);
+  color: var(--text3); cursor: pointer; letter-spacing: 1px;
+  transition: all 0.15s; white-space: nowrap;
+}
+.filter-btn:hover { border-color: var(--border2); color: var(--text); }
+.filter-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+.filter-btn[data-filter="owned"].active   { background: rgba(57,255,20,0.2); border-color: var(--green); color: var(--green); }
+.filter-btn[data-filter="missing"].active { background: rgba(255,62,108,0.15); border-color: var(--accent); color: var(--accent); }
+/* ウィッシュフィルター */
+.filter-btn.wish-filter { color: var(--wish-soft); border-color: var(--border); }
+.filter-btn.wish-filter:hover { border-color: var(--wish-color); color: var(--wish-color); }
+.filter-btn[data-filter="wish"].active {
+  background: rgba(255,110,180,0.15);
+  border-color: var(--wish-color);
+  color: var(--wish-color);
+}
+
+.result-info {
+  padding: 5px 14px; font-size: 11px; color: var(--text3);
+  background: var(--bg2); border-bottom: 1px solid var(--border);
+}
+
+/* ── Game List ── */
+.game-list-container { padding: 10px 14px 80px; max-width: 960px; margin: 0 auto; }
+.game-list { display: flex; flex-direction: column; gap: 5px; }
+
+/* ── Game Row ── */
+.game-row {
+  display: grid;
+  grid-template-columns: 40px 1fr auto auto;
+  align-items: center; gap: 10px;
+  background: var(--surface);
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  padding: 9px 12px;
+  cursor: pointer;
+  transition: all 0.15s;
+  animation: rowIn 0.2s ease-out both;
+}
+@keyframes rowIn { from { opacity:0; transform:translateX(-8px); } to { opacity:1; transform:none; } }
+.game-row:hover { border-color: var(--border2); background: var(--surface2); transform: translateX(2px); }
+.game-row.owned  { border-color: rgba(57,255,20,0.3); background: rgba(57,255,20,0.04); }
+.game-row.owned:hover  { border-color: rgba(57,255,20,0.55); }
+/* ウィッシュ行スタイル */
+.game-row.wished { border-color: rgba(255,110,180,0.35); background: rgba(255,110,180,0.04); }
+.game-row.wished:hover { border-color: rgba(255,110,180,0.6); }
+
+.row-serial { font-family: var(--pixel-font); font-size: 7px; color: var(--text3); text-align: right; }
+.row-main   { min-width: 0; }
+.row-title  {
+  font-size: 13px; font-weight: 700; color: var(--text);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.game-row.owned  .row-title { color: var(--green); }
+.game-row.wished .row-title { color: var(--wish-soft); }
+.row-meta { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-top: 2px; }
+.row-publisher { font-size: 10px; color: var(--text3); }
+.row-date      { font-size: 10px; color: var(--text3); }
+
+.row-rarity { flex-shrink: 0; }
+.row-right  { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; flex-shrink: 0; }
+.row-price       { font-size: 13px; font-weight: 700; color: var(--gold); }
+.row-price.empty { color: var(--text3); font-size: 11px; }
+.row-purchase-date { font-size: 9px; color: var(--text3); }
+
+/* 所持バッジ */
+.owned-badge {
+  font-family: var(--pixel-font); font-size: 7px;
+  padding: 2px 5px;
+  background: rgba(57,255,20,0.2); border: 1px solid var(--green);
+  border-radius: 2px; color: var(--green); margin-left: 4px;
+}
+/* ウィッシュバッジ */
+.wish-badge {
+  font-family: var(--pixel-font); font-size: 7px;
+  padding: 2px 5px;
+  background: rgba(255,110,180,0.2); border: 1px solid var(--wish-color);
+  border-radius: 2px; color: var(--wish-color); margin-left: 4px;
+}
+
+/* ── ウィッシュ 即時トグルボタン（行内） ── */
+.wish-btn {
+  background: none;
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text3);
+  font-size: 14px;
+  width: 30px; height: 30px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s;
+  flex-shrink: 0;
+  line-height: 1;
+}
+.wish-btn:hover { border-color: var(--wish-color); color: var(--wish-color); }
+.wish-btn.wished {
+  background: rgba(255,110,180,0.15);
+  border-color: var(--wish-color);
+  color: var(--wish-color);
+}
+
+/* ── Modal – game info ── */
+.modal-game-info {
+  background: var(--bg); border: 2px solid var(--border);
+  border-radius: var(--radius); padding: 14px;
+}
+.modal-game-title { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 10px; }
+.modal-game-meta  { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.meta-label { font-size: 9px; font-family: var(--pixel-font); color: var(--text3); margin-bottom: 2px; }
+.meta-value { font-size: 12px; color: var(--text2); }
+
+/* ── Star Editor ── */
+.rarity-edit-section {}
+.rarity-edit-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+.rarity-original-label { font-size: 10px; color: var(--text3); font-family: var(--pixel-font); letter-spacing: 1px; }
+.star-editor { display: flex; flex-wrap: wrap; gap: 6px; }
+.star-btn {
+  font-family: var(--pixel-font); font-size: 8px;
+  padding: 6px 10px; background: var(--bg);
+  border: 2px solid var(--border); border-radius: var(--radius);
+  color: var(--text3); cursor: pointer; transition: all 0.15s; letter-spacing: 1px;
+}
+.star-btn:hover { border-color: var(--gold); color: var(--gold); }
+.star-btn.active { background: rgba(255,215,0,0.15); border-color: var(--gold); color: var(--gold); }
+.star-btn.reset-star:hover { border-color: var(--cyan); color: var(--cyan); }
+.star-btn.reset-star.active { background: rgba(0,245,255,0.1); border-color: var(--cyan); color: var(--cyan); }
+.rarity-hint { font-size: 10px; color: var(--text3); margin-top: 8px; }
+
+/* ── Wish Modal Section (v3) ── */
+.wish-modal-section { }
+.wish-toggle-btn {
+  width: 100%;
+  font-family: var(--pixel-font);
+  font-size: 9px;
+  padding: 12px 16px;
+  background: var(--bg);
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text2);
+  cursor: pointer;
+  letter-spacing: 1px;
+  transition: all 0.2s;
+  text-align: center;
+}
+.wish-toggle-btn:hover {
+  border-color: var(--wish-color);
+  color: var(--wish-color);
+  background: rgba(255,110,180,0.08);
+}
+.wish-toggle-btn.wished {
+  background: rgba(255,110,180,0.15);
+  border-color: var(--wish-color);
+  color: var(--wish-color);
+  box-shadow: 0 0 12px rgba(255,110,180,0.25);
+}
+
+/* ── Empty State ── */
+.empty-state {
+  text-align: center; padding: 60px 20px;
+  color: var(--text3); font-family: var(--pixel-font);
+  font-size: 10px; line-height: 2.5;
+}
+.empty-icon { font-size: 48px; margin-bottom: 16px; }
+
+/* ── Mobile ── */
+@media (max-width: 540px) {
+  .toolbar { top: 56px; }
+  .game-row { grid-template-columns: auto 1fr auto; }
+  .row-serial { display: none; }
+  .header-rate { display: none; }
+  .cstat-lbl { font-size: 7px; }
+}

@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="application-name" content="RETRO COLLECTOR">
+  <meta name="description"      content="レトロゲーム収集管理アプリ">
+  <meta name="theme-color"      content="#1a0a2e">
+  <link rel="manifest"          href="manifest.json">
+  <meta name="apple-mobile-web-app-capable"          content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title"            content="RetroCol">
+  <link rel="apple-touch-icon"                href="icons/icon-152.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="icons/icon-152.png">
+  <link rel="apple-touch-icon" sizes="192x192" href="icons/icon-192.png">
+  <link rel="apple-touch-startup-image"
+        media="(device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2)"
+        href="screenshots/splash-750x1334.png">
+  <link rel="apple-touch-startup-image"
+        media="(device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3)"
+        href="screenshots/splash-1125x2436.png">
+  <link rel="apple-touch-startup-image"
+        media="(device-width: 390px) and (device-height: 844px) and (-webkit-device-pixel-ratio: 3)"
+        href="screenshots/splash-1170x2532.png">
+  <link rel="apple-touch-startup-image"
+        media="(device-width: 393px) and (device-height: 852px) and (-webkit-device-pixel-ratio: 3)"
+        href="screenshots/splash-1179x2556.png">
+  <meta name="mobile-web-app-capable"      content="yes">
+  <meta name="msapplication-TileImage"     content="icons/icon-144.png">
+  <meta name="msapplication-TileColor"     content="#1a0a2e">
+  <meta name="msapplication-tap-highlight" content="no">
+  <meta property="og:type"        content="website">
+  <meta property="og:title"       content="RETRO COLLECTOR">
+  <meta property="og:description" content="レトロゲーム収集管理アプリ">
+  <meta property="og:image"       content="icons/icon-512.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+  <link rel="icon" type="image/png" sizes="96x96"   href="icons/icon-96.png">
+  <link rel="shortcut icon"                          href="icons/icon-96.png">
+  <title>RETRO COLLECTOR</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="portal.css">
+</head>
+<body class="portal-body">
+
+  <!-- HEADER -->
+  <header class="portal-header">
+    <div class="header-scanline"></div>
+    <div class="header-inner">
+      <div class="logo-area">
+        <span class="pixel-icon">🕹️</span>
+        <div class="logo-text">
+          <h1 class="logo-title">RETRO COLLECTOR</h1>
+          <p class="logo-sub">レトロゲーム収集管理システム v3</p>
+        </div>
+      </div>
+      <div class="header-stats">
+        <div class="stat-pill">
+          <span class="stat-label">TOTAL</span>
+          <span class="stat-value" id="headerTotal">0</span>
+        </div>
+        <div class="stat-pill owned">
+          <span class="stat-label">OWNED</span>
+          <span class="stat-value" id="headerOwned">0</span>
+        </div>
+        <div class="stat-pill wish">
+          <span class="stat-label">WISH</span>
+          <span class="stat-value" id="headerWish">0</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="portal-main">
+
+    <!-- OVERALL STATS -->
+    <section class="section">
+      <h2 class="section-title"><span class="pixel-dot"></span>COLLECTION STATUS</h2>
+      <div class="stats-grid">
+        <div class="stats-card">
+          <div class="stats-card-icon">📦</div>
+          <div class="stats-card-body">
+            <p class="stats-card-label">総タイトル数</p>
+            <p class="stats-card-value" id="statTotal">0</p>
+          </div>
+        </div>
+        <div class="stats-card owned">
+          <div class="stats-card-icon">✅</div>
+          <div class="stats-card-body">
+            <p class="stats-card-label">所持タイトル</p>
+            <p class="stats-card-value" id="statOwned">0</p>
+          </div>
+        </div>
+        <div class="stats-card value">
+          <div class="stats-card-icon">💰</div>
+          <div class="stats-card-body">
+            <p class="stats-card-label">推定資産価値</p>
+            <p class="stats-card-value" id="statValue">¥0</p>
+          </div>
+        </div>
+        <div class="stats-card rate">
+          <div class="stats-card-icon">📊</div>
+          <div class="stats-card-body">
+            <p class="stats-card-label">総合収集率</p>
+            <p class="stats-card-value" id="statRate">0%</p>
+          </div>
+        </div>
+        <div class="stats-card wish">
+          <div class="stats-card-icon">♡</div>
+          <div class="stats-card-body">
+            <p class="stats-card-label">ウィッシュ合計</p>
+            <p class="stats-card-value" id="statWish">0</p>
+          </div>
+        </div>
+      </div>
+      <div class="overall-progress">
+        <div class="progress-label">
+          <span>OVERALL PROGRESS</span>
+          <span id="overallPct">0%</span>
+        </div>
+        <div class="progress-track">
+          <div class="progress-fill" id="overallBar" style="width:0%"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONSOLE CARDS -->
+    <section class="section">
+      <h2 class="section-title"><span class="pixel-dot"></span>CONSOLES</h2>
+      <div class="consoles-grid" id="consolesGrid"></div>
+    </section>
+
+    <!-- WISH LIST (portal) -->
+    <section class="section" id="wishSection">
+      <h2 class="section-title"><span class="pixel-dot wish-dot"></span>WISH LIST</h2>
+      <div id="wishListContainer">
+        <!-- JS で描画 -->
+      </div>
+    </section>
+
+    <!-- IMPORT NEW CONSOLE -->
+    <section class="section">
+      <h2 class="section-title"><span class="pixel-dot"></span>IMPORT NEW CONSOLE</h2>
+      <div class="import-card">
+        <div class="import-header">
+          <div class="import-icon">📁</div>
+          <div class="import-body">
+            <p class="import-title">CSVファイルから新機種を追加</p>
+            <p class="import-desc">形式: Serial Number, タイトル, 発売元, レア, 発売日</p>
+          </div>
+        </div>
+        <div class="import-actions">
+          <div class="input-group">
+            <label class="pixel-label">機種名</label>
+            <input type="text" id="newConsoleName" class="pixel-input" placeholder="例: ファミリーコンピュータ">
+          </div>
+          <div class="input-group">
+            <label class="pixel-label">機種略称</label>
+            <input type="text" id="newConsoleSlug" class="pixel-input" placeholder="例: FC">
+          </div>
+          <div class="input-group">
+            <label class="pixel-label">テーマカラー</label>
+            <input type="color" id="newConsoleColor" class="pixel-color" value="#e60012">
+          </div>
+          <div class="input-group">
+            <label class="pixel-label">文字コード</label>
+            <select id="csvEncoding" class="pixel-select" style="width:100%">
+              <option value="UTF-8">UTF-8</option>
+              <option value="Shift-JIS">Shift-JIS</option>
+            </select>
+          </div>
+          <div class="input-group full">
+            <label class="pixel-label">CSVファイル</label>
+            <input type="file" id="csvFileInput" class="pixel-file" accept=".csv,.txt">
+          </div>
+          <button class="pixel-btn primary" id="importBtn" onclick="importConsole()">
+            <span>▶ IMPORT</span>
+          </button>
+        </div>
+        <div id="importMsg" class="import-message"></div>
+      </div>
+    </section>
+
+    <!-- BACKUP / RESTORE -->
+    <section class="section">
+      <h2 class="section-title"><span class="pixel-dot"></span>BACKUP &amp; RESTORE</h2>
+      <div class="backup-grid">
+
+        <!-- BACKUP -->
+        <div class="backup-card">
+          <div class="backup-card-header">
+            <span class="backup-card-icon">💾</span>
+            <div>
+              <p class="backup-card-title">バックアップ出力</p>
+              <p class="backup-card-desc">全データを1ファイルにまとめて書き出します</p>
+            </div>
+          </div>
+          <div class="backup-info-row" id="backupInfoRow"></div>
+          <div class="backup-options">
+            <label class="backup-opt-label">出力形式</label>
+            <div class="backup-opt-group">
+              <label class="radio-label">
+                <input type="radio" name="backupFormat" value="json" checked> JSON形式（完全バックアップ・推奨）
+              </label>
+              <label class="radio-label">
+                <input type="radio" name="backupFormat" value="csv"> CSV形式（機種ごとに個別ファイル）
+              </label>
+            </div>
+          </div>
+          <div class="backup-csv-select" id="backupCsvSelect" style="display:none">
+            <label class="pixel-label">出力する機種</label>
+            <select id="backupCsvSlug" class="pixel-select" style="width:100%">
+              <option value="__all__">すべての機種（1機種ずつダウンロード）</option>
+            </select>
+          </div>
+          <button class="pixel-btn primary backup-btn" onclick="doBackup()">⬇ バックアップを保存</button>
+        </div>
+
+        <!-- RESTORE -->
+        <div class="backup-card">
+          <div class="backup-card-header">
+            <span class="backup-card-icon">📂</span>
+            <div>
+              <p class="backup-card-title">データ復元</p>
+              <p class="backup-card-desc">バックアップファイルからデータを復元します</p>
+            </div>
+          </div>
+          <div class="restore-options">
+            <label class="backup-opt-label">復元モード</label>
+            <div class="backup-opt-group">
+              <label class="radio-label">
+                <input type="radio" name="restoreMode" value="merge" checked>
+                マージ（既存データを保持しつつ追加・上書き）
+              </label>
+              <label class="radio-label">
+                <input type="radio" name="restoreMode" value="overwrite">
+                <span class="text-accent">完全上書き（現在のデータをすべて置き換え）</span>
+              </label>
+            </div>
+          </div>
+          <div class="input-group" style="margin-bottom:14px">
+            <label class="pixel-label">バックアップファイル (.json / .csv)</label>
+            <input type="file" id="restoreFileInput" class="pixel-file"
+                   accept=".json,.csv,.txt" onchange="onRestoreFileSelected()">
+          </div>
+          <div class="restore-preview" id="restorePreview" style="display:none"></div>
+          <button class="pixel-btn primary backup-btn" id="restoreBtn"
+                  onclick="confirmRestore()" disabled>⬆ 復元を実行</button>
+          <div id="restoreMsg" class="import-message" style="margin-top:10px"></div>
+        </div>
+
+      </div>
+      <p class="last-backup-label" id="lastBackupLabel"></p>
+    </section>
+
+  </main>
+
+  <footer class="portal-footer">
+    <p>RETRO COLLECTOR v3.0 &nbsp;|&nbsp; データはローカルに保存されます</p>
+  </footer>
+
+  <!-- ===== RESTORE CONFIRM MODAL ===== -->
+  <div class="modal-overlay" id="restoreOverlay" onclick="closeRestoreModal(event)">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 class="modal-title" style="color:var(--accent)">⚠ RESTORE CONFIRM</h3>
+        <button class="modal-close" onclick="document.getElementById('restoreOverlay').classList.remove('open')">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="delete-warning" id="restoreConfirmBody"></div>
+      </div>
+      <div class="modal-footer">
+        <button class="pixel-btn secondary" onclick="document.getElementById('restoreOverlay').classList.remove('open')">キャンセル</button>
+        <button class="pixel-btn danger" id="restoreExecBtn" onclick="executeRestore()">⬆ 復元する</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== EDIT CONSOLE MODAL ===== -->
+  <div class="modal-overlay" id="editOverlay" onclick="closeEditModal(event)">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 class="modal-title">✏ EDIT CONSOLE</h3>
+        <button class="modal-close" onclick="document.getElementById('editOverlay').classList.remove('open')">✕</button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="editSlug">
+        <div class="form-col">
+          <div class="input-group">
+            <label class="pixel-label">機種略称 (変更不可)</label>
+            <input type="text" id="editSlugDisplay" class="pixel-input" disabled style="opacity:.5;cursor:not-allowed">
+          </div>
+          <div class="input-group">
+            <label class="pixel-label">機種名</label>
+            <input type="text" id="editName" class="pixel-input" placeholder="機種名">
+          </div>
+          <div class="input-group">
+            <label class="pixel-label">テーマカラー</label>
+            <input type="color" id="editColor" class="pixel-color">
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="pixel-btn secondary" onclick="document.getElementById('editOverlay').classList.remove('open')">キャンセル</button>
+        <button class="pixel-btn primary" onclick="saveEditConsole()">▶ 保存</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== DELETE CONFIRM MODAL ===== -->
+  <div class="modal-overlay" id="deleteOverlay" onclick="closeDeleteModal(event)">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 class="modal-title" style="color:var(--accent)">⚠ DELETE CONSOLE</h3>
+        <button class="modal-close" onclick="document.getElementById('deleteOverlay').classList.remove('open')">✕</button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="deleteSlugTarget">
+        <div class="delete-warning">
+          <p class="delete-msg">
+            <strong id="deleteNameLabel" class="text-cyan"></strong> を削除しますか？<br><br>
+            <span class="text-accent">ゲームリストと所持データがすべて削除されます。<br>この操作は元に戻せません。</span>
+          </p>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="pixel-btn secondary" onclick="document.getElementById('deleteOverlay').classList.remove('open')">キャンセル</button>
+        <button class="pixel-btn danger" onclick="executeDeleteConsole()">🗑 削除する</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== PWA 更新通知バナー ===== -->
+  <div class="update-banner" id="updateBanner" style="display:none">
+    <span>🔄 アプリの更新があります</span>
+    <button class="update-btn" onclick="applyUpdate()">今すぐ更新</button>
+    <button class="update-dismiss" onclick="document.getElementById('updateBanner').style.display='none'">✕</button>
+  </div>
+
+  <script src="db.js"></script>
+  <script src="portal.js"></script>
+  <script src="backup.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      let newWorker;
+      navigator.serviceWorker.register('./sw.js', { scope: './' })
+        .then(reg => {
+          reg.update();
+          reg.addEventListener('updatefound', () => {
+            newWorker = reg.installing;
+            newWorker.addEventListener('statechange', () => {
+              if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                document.getElementById('updateBanner').style.display = 'flex';
+              }
+            });
+          });
+        }).catch(err => console.warn('SW:', err));
+
+      navigator.serviceWorker.addEventListener('message', e => console.log('SW:', e.data));
+
+      window.applyUpdate = () => {
+        if (newWorker) newWorker.postMessage('SKIP_WAITING');
+        navigator.serviceWorker.addEventListener('controllerchange', () => location.reload());
+      };
+    }
+  </script>
+</body>
+</html>
